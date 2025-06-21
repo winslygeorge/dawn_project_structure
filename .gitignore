@@ -1,0 +1,9 @@
+*.logs
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swp~
+*.swo
+*.rdb

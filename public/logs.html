@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dawn Log Viewer</title>
+  <style>
+    body { background: #fff3e0; font-family: sans-serif; color: #4e342e; padding: 1rem; }
+    h2 { color: #ef6c00; }
+    .filter { margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 0.5rem; border: 1px solid #ccc; }
+    th { background: #ffe0b2; }
+    .summary { margin: 1rem 0; padding: 0.5rem; background: #fff8e1; }
+    canvas { background: #ffffff; border: 1px solid #ffcc80; }
+  </style>
+</head>
+<body>
+  <h2>📊 Dawn Log Dashboard</h2>
+
+  <div class="filter">
+    Level: 
+    <select id="level">
+      <option value="">All</option>
+      <option value="INFO">INFO</option>
+      <option value="WARN">WARN</option>
+      <option value="ERROR">ERROR</option>
+    </select>
+    Source: 
+    <input type="text" id="source" placeholder="e.g. DawnServer">
+    <button onclick="startStream()">Apply Filters</button>
+  </div>
+
+  <div class="summary" id="summary">Loading summary...</div>
+
+  <table id="logTable">
+    <thead>
+      <tr><th>Time</th><th>Level</th><th>Source</th><th>Message</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <canvas id="logChart" width="600" height="200"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    let eventSource;
+    const table = document.querySelector("#logTable tbody");
+    const summaryDiv = document.getElementById("summary");
+    const ctx = document.getElementById("logChart").getContext("2d");
+    const chartData = {
+      labels: [],
+      datasets: [{
+        label: 'Memory Usage (MB)',
+        backgroundColor: '#ff9800',
+        borderColor: '#ef6c00',
+        data: [],
+        fill: false
+      }]
+    };
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: chartData,
+      options: { responsive: false, animation: false }
+    });
+
+    function startStream() {
+      if (eventSource) eventSource.close();
+      table.innerHTML = '';
+      summaryDiv.textContent = 'Streaming...';
+
+      const level = document.getElementById("level").value;
+      const source = document.getElementById("source").value;
+      let url = '/sse/logs';
+      const params = [];
+      if (level) params.push("level=" + level);
+      if (source) params.push("source=" + encodeURIComponent(source));
+      if (params.length) url += "?" + params.join("&");
+
+      let count = 0;
+      let memTotal = 0;
+      chartData.labels = [];
+      chartData.datasets[0].data = [];
+      chart.update();
+
+      eventSource = new EventSource(url);
+      eventSource.onmessage = function(event) {
+        const log = JSON.parse(event.data);
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${log.timestamp}</td><td>${log.level}</td><td>${log.source}</td><td>${log.message}</td>`;
+        table.appendChild(row);
+        count++;
+        memTotal += log.memory_usage || 0;
+
+        chartData.labels.push(new Date(log.timestamp).toLocaleTimeString());
+        chartData.datasets[0].data.push((log.memory_usage || 0).toFixed(2));
+        chart.update();
+
+        summaryDiv.textContent = `Total Logs: ${count}, Avg Memory: ${(memTotal / count).toFixed(2)} MB`;
+      };
+    }
+    window.onload = startStream;
+  </script>
+</body>
+</html>
+<script>
+  // Automatically start streaming logs when the page loads
+  window.onload = startStream;
+</script>

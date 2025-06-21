@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JWT API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background: #f0f0f0;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Test JWT Protected API</h1>
+  <p>Paste your JWT below and click "Fetch":</p>
+
+  <textarea id="token">
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAxNzI2MjksImlzcyI6Im15LXNlcnZpY2UiLCJpYXQiOjE3NTAxNzA4MjksInR5cGUiOiJhY2Nlc3MiLCJhdWQiOiJteS1jbGllbnQtYXBwIiwicm9sZSI6ImFkbWluIiwic3ViIjoiYWRtaW4ifQ.c_SFAxITmAT_____xmLpAwoGRCwDRoLx_____95o_LH_____8OygsVvgzR
+  </textarea>
+
+  <br><br>
+  <button onclick="fetchHello()">Fetch /api/hello</button>
+
+  <h2>Response:</h2>
+  <pre id="response">Waiting for response...</pre>
+
+  <script>
+    async function fetchHello() {
+      const token = document.getElementById('token').value.trim();
+      const responseBox = document.getElementById('response');
+
+      try {
+        const res = await fetch("http://localhost:3000/api/hello", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        });
+
+        const data = await res.json();
+        responseBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        responseBox.textContent = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>

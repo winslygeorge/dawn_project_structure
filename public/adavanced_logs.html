@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Logs Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js">  function isWithinDateRange(entry) {
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    if (!start && !end) return true;
+    const logDate = new Date(entry.timestamp).toISOString().split("T")[0];
+    if (start && logDate < start) return false;
+    if (end && logDate > end) return false;
+    return true;
+  }
+function showAlert(level) {
+    const alerts = document.getElementById("alerts");
+    alerts.style.display = "block";
+    alerts.textContent = `⚠️ ${level} log received!`;
+    setTimeout(() => { alerts.style.display = "none"; }, 3000);
+  }
+</script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      padding: 1rem;
+    }
+    :root {
+      --bg-color: #121212;
+      --text-color: #ddd;
+      --panel-bg: #1e1e1e;
+    }
+    .light-mode {
+      --bg-color: #fff;
+      --text-color: #000;
+      --panel-bg: #f0f0f0;
+    }
+    #filters { margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    #logs {
+      white-space: pre-wrap;
+      max-height: 40vh;
+      overflow-y: auto;
+      background: var(--panel-bg);
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .INFO { color: #4caf50; }
+    .DEBUG { color: #9e9e9e; }
+    .WARN { color: #ffc107; }
+    .ERROR { color: #f44336; }
+    .FATAL { color: #ffffff; background: #880000; padding: 0 4px; border-radius: 2px; }
+    .metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 1rem 0;
+    }
+    .metric-box {
+      background: var(--panel-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 150px;
+      text-align: center;
+    }
+    canvas { background: var(--panel-bg); border-radius: 8px; }
+    #controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    button { margin-left: 0.5rem; }
+  #alerts {
+      position: fixed;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      background: #d32f2f;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      font-weight: bold;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="alerts">⚠️ Critical log received</div>
+  <div id="controls">
+    <h2>Live Logs & Metrics</h2>
+    <div>
+      <button onclick="toggleTheme()">Toggle Theme</button>
+      <button onclick="exportLogs()">Export Logs</button>
+    </div>
+  </div>
+
+  <div id="filters">
+    <label>Search: <input type="text" id="searchTerm" placeholder="keyword in message..." /></label>
+    <label>Component: <input type="text" id="component" placeholder="e.g. Auth" /></label>
+    <label>Level:
+      <select id="level">
+        <option value="">All</option>
+        <option value="DEBUG">DEBUG</option>
+        <option value="INFO">INFO</option>
+        <option value="WARN">WARN</option>
+        <option value="ERROR">ERROR</option>
+        <option value="FATAL">FATAL</option>
+      </select>
+    </label>
+    <label>Date Range:
+      <input type="date" id="startDate" /> to
+      <input type="date" id="endDate" />
+    </label>
+    <label>Preset:
+      <select id="preset" onchange="applyPreset()">
+        <option value="">-- Select Preset --</option>
+        <option value="auth_errors">Auth Errors</option>
+        <option value="fatal_only">Only Crashes</option>
+        <option value="warnings_last_24h">Warnings (24h)</option>
+      </select>
+    </label>
+    <button onclick="connect()">Connect</button>
+  </div>
+
+  <script>
+  function applyPreset() {
+    const preset = document.getElementById("preset").value;
+    const level = document.getElementById("level");
+    const component = document.getElementById("component");
+    const startDate = document.getElementById("startDate");
+    const endDate = document.getElementById("endDate");
+
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const format = (d) => d.toISOString().slice(0, 10);
+
+    switch (preset) {
+      case "auth_errors":
+        level.value = "ERROR";
+        component.value = "Auth";
+        startDate.value = "";
+        endDate.value = "";
+        break;
+      case "fatal_only":
+        level.value = "FATAL";
+        component.value = "";
+        startDate.value = "";
+        endDate.value = "";
+        break;
+      case "warnings_last_24h":
+        level.value = "WARN";
+        component.value = "";
+        startDate.value = format(yesterday);
+        endDate.value = format(today);
+        break;
+      default:
+        level.value = "";
+        component.value = "";
+        startDate.value = "";
+        endDate.value = "";
+    }
+  }
+
+  function isWithinDateRange(entry) {
+    const start = document.getElementById("startDate").value;
+    const end = document.getElementById("endDate").value;
+    if (!start && !end) return true;
+    const logDate = new Date(entry.timestamp).toISOString().split("T")[0];
+    if (start && logDate < start) return false;
+    if (end && logDate > end) return false;
+    return true;
+  }
+
+  let source;
+  function connect() {
+    const searchTerm = document.getElementById("searchTerm").value.toLowerCase();
+    if (source) source.close();
+    const comp = document.getElementById("component").value;
+    const level = document.getElementById("level").value;
+    const query = new URLSearchParams();
+    if (comp) query.append("component", comp);
+    if (level) query.append("level", level);
+    source = new EventSource("/sse/logs" + (query.toString() ? "?" + query : ""));
+
+    source.onmessage = (e) => {
+      try {
+        const entry = JSON.parse(e.data);
+        if (isWithinDateRange(entry) && (!searchTerm || entry.message.toLowerCase().includes(searchTerm))) {
+          allLogs.push(entry);
+          logEntry(entry);
+          if (entry.level === "ERROR" || entry.level === "FATAL") showAlert(entry.level);
+          updateMetrics(entry);
+        }
+      } catch (err) {
+        console.error("Invalid log format", e.data);
+      }
+    };
+
+    source.onerror = (e) => {
+      console.error("SSE connection lost. Attempting to reconnect in 2s...");
+      source.close();
+      setTimeout(connect, 2000);
+    };
+  }
+</script>

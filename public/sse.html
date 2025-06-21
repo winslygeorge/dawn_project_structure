@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DawnServer SSE Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .message-box {
+            background-color: #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            white-space: pre-wrap; /* Preserve whitespace and breaks */
+        }
+        .message-box:last-child {
+            margin-bottom: 0;
+        }
+        .header {
+            color: #2c3e50;
+            font-size: 1.875rem; /* 30px */
+            font-weight: 700; /* bold */
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #fca5a5; /* Red for disconnected */
+            transition: background-color 0.3s ease;
+        }
+        .status-dot.connected {
+            background-color: #34d399; /* Green for connected */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="container">
+        <h1 class="header">Server-Sent Events (SSE) Example</h1>
+
+        <div id="messages" class="space-y-4 max-h-96 overflow-y-auto pr-2">
+            <!-- Messages will be appended here -->
+            <p class="text-gray-500 text-center py-4">Waiting for server events...</p>
+        </div>
+
+        <div class="status-indicator">
+            <span id="statusDot" class="status-dot"></span>
+            <span id="statusText" class="text-sm">Disconnected</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messagesDiv = document.getElementById('messages');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+
+            // Replace with your server's address and port
+            const eventSource = new EventSource('http://localhost:3000/sse/events'); // Assuming DawnServer runs on port 3000
+
+            // Function to add a message to the display
+            function addMessage(type, data) {
+                const messageBox = document.createElement('div');
+                messageBox.className = 'message-box';
+                let content = `<strong>Type:</strong> ${type}<br>`;
+
+                try {
+                    const parsedData = JSON.parse(data);
+                    content += `<strong>ID:</strong> ${parsedData.id}<br>`;
+                    content += `<strong>Timestamp:</strong> ${new Date(parsedData.timestamp * 1000).toLocaleString()}<br>`;
+                    content += `<strong>Message:</strong> ${parsedData.message}`;
+                } catch (e) {
+                    // If not JSON, display raw data
+                    content += `<strong>Data:</strong> ${data}`;
+                }
+
+                messageBox.innerHTML = content;
+                messagesDiv.prepend(messageBox); // Add new messages to the top
+                // Remove the initial "Waiting for server events..." message if present
+                const initialMessage = messagesDiv.querySelector('.text-center.py-4');
+                if (initialMessage) {
+                    messagesDiv.removeChild(initialMessage);
+                }
+            }
+
+            // Event listener for generic messages (event: 'message')
+            eventSource.onmessage = (event) => {
+                addMessage('message', event.data);
+            };
+
+            // Event listener for custom event 'update'
+            eventSource.addEventListener('update', (event) => {
+                addMessage('update', event.data);
+            });
+
+            // Event listener for when the connection is opened
+            eventSource.onopen = () => {
+                console.log('SSE Connection opened');
+                statusDot.classList.add('connected');
+                statusText.textContent = 'Connected';
+            };
+
+            // Event listener for errors
+            eventSource.onerror = (error) => {
+                console.error('SSE Error:', error);
+                statusDot.classList.remove('connected');
+                statusText.textContent = 'Disconnected';
+                addMessage('error', 'Connection closed or error occurred.');
+                eventSource.close(); // Attempt to close the connection to prevent repeated errors
+            };
+
+            // Event listener for when the connection is explicitly closed by the server
+            // Note: This won't fire if the server just stops sending events without closing.
+            // It primarily fires on network errors or explicit server `sse_close`.
+            eventSource.addEventListener('close', () => {
+                console.log('SSE Connection explicitly closed by server');
+                statusDot.classList.remove('connected');
+                statusText.textContent = 'Disconnected (Server Closed)';
+                addMessage('info', 'Server explicitly closed the connection.');
+                eventSource.close(); // Ensure client side also closes
+            });
+        });
+    </script>
+</body>
+</html>

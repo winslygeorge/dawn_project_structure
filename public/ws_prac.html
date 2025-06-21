@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DawnSockets Chat</title>
+</head>
+<body>
+  <h1>WebSocket Chat Test</h1>
+  <input type="text" id="nickname" placeholder="Nickname" />
+  <input type="text" id="message" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+  <div id="chat-log"></div>
+
+  <script>
+    const userId = Math.random().toString(36).substring(2, 10);
+    const topic = "chat:lobby";
+    const ws = new WebSocket("ws://localhost:3000/ws");
+
+    const log = (msg) => {
+      document.getElementById("chat-log").innerHTML += `<p>${msg}</p>`;
+    };
+
+    ws.onopen = () => {
+      log("WebSocket connected.");
+
+      // Send initial join event
+      ws.send(JSON.stringify({
+        topic: topic,
+        event: "join",
+        payload: {
+          sender: "Guest_" + userId,
+        },
+        user_id: userId
+      }));
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      const eventName = data.event || data.type;
+      if (eventName === "new_message" || eventName === "system_message") {
+        const msg = data.payload;
+        log(`<strong>${msg.sender_nickname || "System"}:</strong> ${msg.body || msg.message}`);
+      } else {
+        console.log("Other event:", data);
+      }
+    };
+
+    ws.onclose = () => {
+      log("WebSocket disconnected.");
+    };
+
+    function sendMessage() {
+      const message = document.getElementById("message").value;
+      const nickname = document.getElementById("nickname").value || "Anon_" + userId;
+      ws.send(JSON.stringify({
+        topic: topic,
+        event: "message",
+        payload: {
+          body: message,
+          sender: nickname,
+          client_message_id: Math.random().toString(36).substring(2, 10)
+        },
+        user_id: userId
+      }));
+    }
+  </script>
+</body>
+</html>

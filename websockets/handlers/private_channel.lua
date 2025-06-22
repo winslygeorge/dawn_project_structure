@@ -1,5 +1,5 @@
 -- Example of a private messaging channel handler
-local cjson = require("cjson")
+local cjson = require("dkjson")
 local log_levels = require('utils.logger').LogLevel -- Assuming you have log levels
 local PrivateChannel = {}
 

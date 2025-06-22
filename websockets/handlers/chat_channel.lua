@@ -1,4 +1,4 @@
-local cjson = require("cjson")
+local cjson = require("dkjson")
 local uuid = require("utils.uuid")
 
 local ChatHandler = {}

@@ -1,4 +1,4 @@
-require("bootstrap")("../") -- Adjust the path as needed
+require("bootstrap")("./") -- Adjust the path as needed
 local DawnServer = require("dawn").dawn_server 
 local server_config = require('config.server_config')
 local routes = require('routes._index')

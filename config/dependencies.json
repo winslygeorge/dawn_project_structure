@@ -1,0 +1,12 @@
+[
+  { "name": "dawn"},
+  { "name": "dawn_db"},
+  { "name": "dkjson" },
+  { "name": "lua-zlib" },
+  { "name": "luasocket" },
+  { "name": "lustache" },
+  { "name": "luv" },
+  { "name": "net-url" },
+  { "name": "redis-lua" },
+  { "name": "uwebsockets"}
+]

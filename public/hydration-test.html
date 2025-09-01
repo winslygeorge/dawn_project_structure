@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hydration Test</title>
+
+ <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Define helpers AFTER DOM is ready
+
+    window.__updateReactiveVar__ = function (varName, value) {
+      const els = document.querySelectorAll(`[data-bind="${varName}"]`);
+      els.forEach(el => {
+        if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+          el.value = value;
+        } else {
+          el.textContent = value;
+        }
+      });
+    };
+
+    window.__initializeReactiveInputs__ = function () {
+      document.body.addEventListener('input', function (e) {
+        const target = e.target;
+        const name = target.getAttribute('data-bind');
+        if (name && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) {
+          if (window.sendPatch) {
+            window.sendPatch('setFormField', [name, target.value]);
+          } else {
+            console.log(`[MockPatch] Would send: ${name} = ${target.value}`);
+          }
+        }
+      });
+    };
+
+    // Minimal reactiveComponentInstance mock
+    window.reactiveComponentInstance = {
+      state: { count: 5, username: "Tester" },
+      setState(partial) {
+        Object.assign(this.state, partial);
+        const patches = [];
+        for (const k in partial) {
+          patches.push({ type: "update-var", varName: k, value: partial[k] });
+        }
+        patches.forEach(p => window.__updateReactiveVar__(p.varName, p.value));
+        return patches;
+      }
+    };
+
+    async function applyInitialState(state) {
+      const instance = await Promise.resolve(window.reactiveComponentInstance);
+      Object.assign(instance.state, state);
+      for (const k in state) {
+        window.__updateReactiveVar__(k, state[k]);
+      }
+      window.__initializeReactiveInputs__();
+      console.log("Hydration complete with state:", state);
+    }
+
+    if (window.__INITIAL_STATE__) {
+      applyInitialState(window.__INITIAL_STATE__);
+    }
+  });
+</script>
+
+</head>
+<body>
+
+  <h1>Hydration Test</h1>
+
+  <div>
+    <label>Username:</label>
+    <input data-bind="username" type="text" value="">
+    <p>Hello, <span data-bind="username"></span>!</p>
+  </div>
+
+  <div>
+    <label>Count:</label>
+    <input data-bind="count" type="number">
+    <p>Current count is: <span data-bind="count"></span></p>
+  </div>
+
+  <button onclick="reactiveComponentInstance.setState({ count: reactiveComponentInstance.state.count + 1 })">Increment</button>
+
+</body>
+</html>

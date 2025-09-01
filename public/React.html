@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DOM Binding Demo</title>
+  <style>
+    .highlight { font-weight: bold; color: green; }
+    .red { color: red; }
+    .brown { color: brown; }
+  </style>
+</head>
+<body>
+  <h2 ui-bind="title"></h2>
+
+  <!-- Two-way binding -->
+  <input type="text" ui-model="title" placeholder="Update title" />
+  <hr>
+
+  <!-- Conditional rendering -->
+  <button ui-if="showSave">Save</button>
+  <p ui-else="showSave">Saving disabled</p>
+
+  <!-- Attribute + class binding -->
+  <button ui-class="highlight:isImportant" ui-attr-title="tooltipText">
+    Hover for tooltip
+  </button>
+
+  <!-- Style binding -->
+  <div ui-style="backgroundColor:bgColor" style="padding: 10px;">Styled Box</div>
+
+  <!-- Loop with alternating styles -->
+  <div ui-loop="user in users" ui-loop-style="odd:color:red;even:color:brown" ui-loop-skip="every-3">
+    <p>User: <span ui-bind="user.name"></span></p>
+  </div>
+
+  <!-- Fallback if list empty -->
+  <p ui-loop-empty="users">No users available.</p>
+
+  <script type="module">
+    import { bindStateToDOM } from './domBindings.js';
+
+    // Minimal reactive client store simulation
+    let state = {
+      title: "User List",
+      showSave: true,
+      isImportant: true,
+      tooltipText: "Click to save",
+      bgColor: "#eef",
+      users: [
+        { name: "Alice" },
+        { name: "Bob" },
+        { name: "Charlie" },
+        { name: "Diana" },
+        { name: "Evan" },
+        { name: "Faith" }
+      ],
+      __page: { users: 1 },
+      __perPage: { users: 10 }
+    };
+
+    // Simple reactive mechanism (mock Redux)
+    function dispatch(action) {
+      if (action.type === "__SET_MODEL") {
+        state[action.key] = action.value;
+        bindStateToDOM(state, dispatch);
+      }
+    }
+
+    bindStateToDOM(state, dispatch);
+  </script>
+</body>
+</html>

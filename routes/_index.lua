@@ -4,7 +4,8 @@ M.__index = M
 -- Route modules
 M.auth = require('routes.auth_routes')
 M.system = require('routes._system_routes')
--- M.ws = require('routes.ws_routes')
+M.app = require('routes.app_routes')
+M.ws = require('routes.ws_routes')
 
 -- Initializes the routes with the server instance
 function M:load(server)

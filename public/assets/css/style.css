@@ -1,0 +1,98 @@
+
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Base styles for rounded corners as per instructions */
+        * {
+            border-radius: 0.5rem; /* Apply rounded corners to all elements by default */
+        }
+        /* Specific overrides for elements that should not have rounded corners (e.g., full-width sections) */
+        section, footer, nav {
+            border-radius: 0;
+        }
+        /* Style for the code block placeholder */
+        .code-block-placeholder {
+            background-color: #2D2D2D; /* Darker background for code */
+            color: #ABB2BF; /* Light grey text */
+            font-family: 'Fira Code', monospace;
+            padding: 1.5rem;
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            font-size: 0.875rem; /* text-sm */
+        }
+        /* Style for the copy button within code blocks */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem; /* Adjusted for aesthetic placement */
+            right: 0.75rem; /* Adjusted for aesthetic placement */
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #FF7733; /* Ember Orange on hover */
+        }
+        .copy-button:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(1px);
+        }
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 1.5rem; /* bottom-6 */
+            right: 1.5rem; /* right-6 */
+            background-color: #FF7733; /* Ember Orange */
+            color: #FFFBFF; /* Dawn White */
+            padding: 1rem;
+            border-radius: 9999px; /* rounded-full */
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.2s ease;
+            z-index: 1000;
+            border: none;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        #back-to-top:hover {
+            background-color: #FF5C0A; /* Lava Orange */
+            transform: translateY(-3px);
+        }
+        #back-to-top:active {
+            background-color: #FF7733; /* Ember Orange */
+            transform: translateY(1px);
+        }
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            #back-to-top {
+                bottom: 1rem; /* Adjusted for smaller screens */
+                right: 1rem; /* Adjusted for smaller screens */         
+            }
+            .copy-button {
+                top: 0.5rem; /* Adjusted for smaller screens */
+                right: 0.5rem; /* Adjusted for smaller screens */
+            }
+        }
+    

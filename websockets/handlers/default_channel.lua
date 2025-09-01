@@ -8,6 +8,10 @@ local DefaultHandlers = {}
         state.last_pong = os.time() -- Update last pong time
         shared.sockets.logger:debug(string.format("[DEFAULT] Received ping from %s", state.ws_id))
     end,
+    pong = function(ws, payload, state, shared, topic)
+        -- ws:send('{"type":"ping"}')
+        state.last_ping = os.time() -- Update last ping time
+    end,
     -- Example of handling an unknown event
     unknown = function(ws, payload, state, shared, topic)
         ws:send(cjson.encode({ error = "Unknown event for this topic", event = payload.event }))

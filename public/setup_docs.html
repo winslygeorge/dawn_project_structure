@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawn Framework Docs | Getting Started</title>
+    <!-- Favicon - You can replace this with your own favicon -->
+    <link rel="icon" href="https://placehold.co/32x32/17183B/FFFBFF?text=DF" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;600;700&family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Tailwind CSS Configuration - Define custom colors and fonts -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#17183B',       // Midnight Blue
+                        'primary-lighter': '#2C2D50', // A lighter shade of primary for backgrounds
+                        'secondary': '#FF7733',     // Ember Orange
+                        'accent': '#FF5C0A',        // Lava Orange
+                        'dawn-white': '#FFFBFF',    // Dawn White
+                        'tertiary': '#0E402D',      // Forest Green
+                        'steel-gray': '#2C2D50',    // Steel Gray
+                        'light-gray': '#EAEAEAEA',  // Light Gray
+                        'soft-yellow': '#FFF4E5',   // Soft Yellow
+                        'coral-pink': '#FFA48C',    // Coral Pink
+                    },
+                    fontFamily: {
+                        heading: ['Poppins', 'Inter', 'sans-serif'],
+                        body: ['Roboto', 'Open Sans', 'sans-serif'],
+                        code: ['Fira Code', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS for subtle overrides or specific element styles -->
+    <style>
+        /* Smooth scrolling for anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+        /* Base styles for rounded corners as per instructions */
+        * {
+            border-radius: 0.5rem; /* Apply rounded corners to all elements by default */
+        }
+        /* Specific overrides for elements that should not have rounded corners (e.g., full-width sections) */
+        section, footer, nav {
+            border-radius: 0;
+        }
+        /* Style for the code block placeholder */
+        .code-block-placeholder {
+            background-color: #2D2D2D; /* Darker background for code */
+            color: #ABB2BF; /* Light grey text */
+            font-family: 'Fira Code', monospace;
+            padding: 1.5rem;
+            overflow-x: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+            font-size: 0.875rem; /* text-sm */
+        }
+        /* Style for the copy button within code blocks */
+        .copy-button {
+            position: absolute;
+            top: 0.75rem; /* Adjusted for aesthetic placement */
+            right: 0.75rem; /* Adjusted for aesthetic placement */
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem; /* rounded-md */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            outline: none;
+        }
+        .copy-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #FF7733; /* Ember Orange on hover */
+        }
+        .copy-button:active {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(1px);
+        }
+        /* Back to Top Button */
+        #back-to-top {
+            position: fixed;
+            bottom: 1.5rem; /* bottom-6 */
+            right: 1.5rem; /* right-6 */
+            background-color: #FF7733; /* Ember Orange */
+            color: #FFFBFF; /* Dawn White */
+            padding: 1rem;
+            border-radius: 9999px; /* rounded-full */
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.2s ease;
+            z-index: 1000;
+            border: none;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        #back-to-top:hover {
+            background-color: #FF5C0A; /* Lava Orange */
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="font-body text-steel-gray bg-dawn-white antialiased">
+
+    <!-- Navigation Bar (Reused from Homepage) -->
+    <nav class="bg-primary shadow-lg p-4 md:p-6 sticky top-0 z-50 rounded-none">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <!-- Logo/Brand Name -->
+            <a href="index.html" class="text-dawn-white font-heading text-3xl font-bold mb-4 md:mb-0 flex items-center transform hover:scale-105 transition-transform duration-300">
+                <!-- SVG Logo (Reused from Homepage) -->
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="mr-2">
+                    <path d="M12 2L2 12V22L12 12L22 2V12L12 2ZM12 12L7 17L12 22L17 17L12 12Z" fill="#FF7733"/>
+                    <path d="M12 2L2 12H22L12 2Z" fill="#FF5C0A"/>
+                    <path d="M12 12L2 22H22L12 12Z" fill="#FFFBFF"/>
+                </svg>
+                Dawn <span class="text-secondary ml-1">Framework</span>
+            </a>
+
+            <!-- Navigation Links (Reused from Homepage, adjusted for docs) -->
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 text-lg">
+                <a href="index.html#overview" class="text-dawn-white hover:text-secondary hover:underline transition-all duration-300">Home</a>
+                <a href="#getting-started" class="text-secondary hover:underline transition-all duration-300">Docs</a>
+                <a href="index.html#community" class="text-dawn-white hover:text-secondary hover:underline transition-all duration-300">Community</a>
+                <a href="index.html#blog" class="text-dawn-white hover:text-secondary hover:underline transition-all duration-300">Blog</a>
+            </div>
+
+            <!-- Get Started Button (Reused from Homepage) -->
+            <a href="index.html#get-started" class="mt-4 md:mt-0 px-6 py-3 bg-secondary text-dawn-white font-bold rounded-full shadow-lg hover:bg-accent transition-colors duration-300 transform hover:scale-105">
+                Get Started
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container mx-auto px-4 py-8 md:py-12 flex flex-col lg:flex-row gap-8">
+
+   
+
+        <!-- Right Main Documentation Content -->
+        <main class="w-full lg:w-3/4 bg-dawn-white p-8 rounded-lg shadow-lg">
+            <h1 id="getting-started" class="font-heading text-4xl md:text-5xl font-bold text-primary mb-8">Getting Started with Dawn Framework</h1>
+
+            <section id="requirements" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">1. Requirements</h2>
+                <p class="text-lg text-steel-gray mb-4">
+                    Before you begin, ensure your system meets the following requirements:
+                </p>
+                <ul class="list-disc list-inside text-lg text-steel-gray space-y-2">
+                    <li><strong>For Windows Users:</strong>
+                        <p class="ml-4">Windows Subsystem for Linux (WSL) is required, as Dawn Framework currently supports Linux-based systems. Please install WSL (e.g., Ubuntu distribution) by following <a href="https://learn.microsoft.com/en-us/windows/wsl/install" target="_blank" class="text-secondary hover:underline">Microsoft's official guide</a>.</p>
+                    </li>
+                    <li><strong>For Linux Users (or WSL Environment):</strong>
+                        <p class="ml-4">A Debian-based Linux distribution (like Ubuntu) is recommended. Ensure you have `sudo` privileges.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="installation" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">2. Installation</h2>
+                <p class="text-lg text-steel-gray mb-4">
+                    Dawn Framework installation is automated via a shell script. Follow these steps:
+                </p>
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">Step 1: Update your system's package list</h3>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>sudo apt update</code></pre>
+                </div>
+
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">Step 2: Download the `build_dawn.sh` script</h3>
+                <p class="text-lg text-steel-gray mb-4">
+                    Download the official `build_dawn.sh` script. You can usually find it in the Dawn Framework's GitHub repository. For example:
+                </p>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>wget https://example.com/path/to/build_dawn.sh # Replace with actual download URL</code></pre>
+                </div>
+
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">Step 3: Make the script executable</h3>
+                <p class="text-lg text-steel-gray mb-4">
+                    Before running, you need to grant execution permissions to the script:
+                </p>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>chmod +x build_dawn.sh</code></pre>
+                </div>
+
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">Step 4: Run the installation script</h3>
+                <p class="text-lg text-steel-gray mb-4">
+                    Execute the script with `sudo` permissions. The script will prompt you for confirmations for various installations. You can add `-Y` to auto-approve all prompts.
+                </p>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>sudo ./build_dawn.sh
+# Or for non-interactive installation:
+sudo ./build_dawn.sh -Y</code></pre>
+                </div>
+                <p class="text-lg text-steel-gray mt-4">
+                    The script will install:
+                </p>
+                <ul class="list-disc list-inside text-lg text-steel-gray ml-4 space-y-1">
+                    <li>Essential system dependencies (Git, CMake, Python 3, G++).</li>
+                    <li>Development libraries (OpenSSL, Zlib, PostgreSQL client/server).</li>
+                    <li>Lua environments (Lua 5.1, LuaJIT) and LuaRocks.</li>
+                    <li>LuaRocks dependencies specific to Dawn (`luafilesystem`, `dkjson`, `lustache`).</li>
+                    <li>PostgreSQL and Redis servers, attempting to enable and start their services.</li>
+                    <li>It will also generate and install the `dawn` CLI executable to `/usr/local/bin`.</li>
+                </ul>
+                <p class="text-lg text-steel-gray mt-4">
+                    Upon successful completion, you will be able to use the `dawn` command globally in your terminal.
+                </p>
+            </section>
+
+
+            <section id="first-app" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">3. Your First Dawn App</h2>
+                <p class="text-lg text-steel-gray mb-4">
+                    Create a new Dawn project using the CLI:
+                </p>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>dawn new my_awesome_app
+cd my_awesome_app</code></pre>
+                </div>
+
+                <p class="text-lg text-steel-gray mb-4">
+                    The CLI will set up a basic project structure. Your main entry file is typically `main.lua`.
+                    Here's a simplified version of `main.lua` and a basic route definition:
+                </p>
+
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">main.lua</h3>
+                <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <div class="absolute -top-3 left-6 flex space-x-2">
+                        <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                        <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                        <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                    </div>
+                    <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-orange-400">require</span>(<span class="text-green-400">"bootstrap"</span>)(<span class="text-green-400">"./"</span>)
+<span class="text-blue-400">local</span> DawnServer = <span class="text-orange-400">require</span>(<span class="text-green-400">"dawn"</span>).dawn_server
+<span class="text-blue-400">local</span> server_config = <span class="text-orange-400">require</span>(<span class="text-green-400">'config.server_config'</span>)
+<span class="text-blue-400">local</span> routes = <span class="text-orange-400">require</span>(<span class="text-green-400">'routes._index'</span>)
+
+<span class="text-gray-500">-- Create a new DawnServer instance</span>
+<span class="text-blue-400">local</span> server = DawnServer:<span class="text-yellow-400">new</span>(server_config)
+
+<span class="text-gray-500">-- Register all routes</span>
+routes:<span class="text-yellow-400">load</span>(server):<span class="text-yellow-400">registerAllRoutes</span>()
+
+<span class="text-gray-500">-- Start the server</span>
+server:<span class="text-yellow-400">start</span>()
+                    </code></pre>
+                </div>
+
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">routes/_index.lua</h3>
+                <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <div class="absolute -top-3 left-6 flex space-x-2">
+                        <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                        <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                        <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                    </div>
+                    <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> json = <span class="text-orange-400">require</span>(<span class="text-green-400">'dkjson'</span>)
+
+<span class="text-blue-400">local</span> M = {}
+M.<span class="text-white">__index</span> = M
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">new</span>(server)
+  <span class="text-blue-400">local</span> self = <span class="text-orange-400">setmetatable</span>({}, M)
+  self.<span class="text-white">server</span> = server
+  <span class="text-red-400">return</span> self
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">routes</span>()
+
+  <span class="text-gray-500">-- Your routes go here, e.g.:</span>
+  self.<span class="text-white">server</span>:<span class="text-yellow-400">get</span>(<span class="text-green-400">"/home"</span>, <span class="text-blue-400">function</span>(req, res)
+    <span class="text-gray-500">-- Your data handling logic</span>
+    res:<span class="text-yellow-400">writeStatus</span>(200):<span class="text-yellow-400">send</span>(<span class="text-green-400">"Hello, Welcome to Dawn web server!"</span>);
+  <span class="text-blue-400">end</span>)
+
+<span class="text-blue-400">end</span>
+
+<span class="text-red-400">return</span> M
+                    </code></pre>
+                </div>
+
+                <p class="text-lg text-steel-gray mt-4">
+                    To run your application, use the Dawn CLI:
+                </p>
+                <div class="bg-primary p-6 rounded-lg shadow-inner relative">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <pre class="code-block-placeholder"><code>dawn serve</code></pre>
+                </div>
+            </section>
+
+            <section id="project-structure" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">4. Project Structure Overview</h2>
+                <p class="text-lg text-steel-gray mb-6">
+                    A typical Dawn Framework project generated by `dawn new` provides a well-organized directory structure to help you build scalable applications. Here's a breakdown of the key directories and files:
+                </p>
+
+                <!-- Root level files -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">Root Files</h3>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`main.lua`</strong>: The primary entry point of your Dawn application. This file bootstraps the server, loads configurations, and registers routes.</li>
+                        <li><strong>`bootstrap.lua`</strong>: Handles the initial setup and path configurations for your Lua application, ensuring all modules can be properly `require`d.</li>
+                        <li><strong>`env.lua`</strong>: A utility module for loading environment variables from `.env` files (like `dev.env` or `prod.env`) and casting their values to appropriate Lua types (strings, numbers, booleans, JSON objects/arrays). It also includes a caching mechanism for loaded environments.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> json_ok, json = <span class="text-orange-400">pcall</span>(<span class="text-orange-400">require</span>, <span class="text-green-400">"dkjson"</span>)
+<span class="text-blue-400">if</span> <span class="text-blue-400">not</span> json_ok <span class="text-blue-400">then</span> <span class="text-orange-400">error</span>(<span class="text-green-400">"dkjson required for env.lua to parse JSON"</span>) <span class="text-blue-400">end</span>
+
+<span class="text-blue-400">local</span> M = { <span class="text-white">_cache</span> = <span class="text-white">nil</span> }
+
+<span class="text-blue-400">local</span> <span class="text-blue-400">function</span> <span class="text-yellow-400">trim</span>(s)
+  <span class="text-blue-400">if</span> <span class="text-orange-400">type</span>(s) ~= <span class="text-green-400">"string"</span> <span class="text-blue-400">then</span> s = <span class="text-orange-400">tostring</span>(s) <span class="text-blue-400">end</span>
+  <span class="text-red-400">return</span> s:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%s*(.-)%s*$"</span>)
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">local</span> <span class="text-blue-400">function</span> <span class="text-yellow-400">cast_value</span>(val)
+  <span class="text-blue-400">if</span> <span class="text-orange-400">type</span>(val) ~= <span class="text-green-400">"string"</span> <span class="text-blue-400">then</span> <span class="text-red-400">return</span> val <span class="text-blue-400">end</span>
+  val = <span class="text-yellow-400">trim</span>(val)
+
+  <span class="text-blue-400">if</span> val == <span class="text-green-400">"true"</span> <span class="text-blue-400">then</span> <span class="text-red-400">return</span> <span class="text-white">true</span> <span class="text-blue-400">end</span>
+  <span class="text-blue-400">if</span> val == <span class="text-green-400">"false"</span> <span class="text-blue-400">then</span> <span class="text-red-400">return</span> <span class="text-white">false</span> <span class="text-blue-400">end</span>
+  <span class="text-blue-400">local</span> num = <span class="text-orange-400">tonumber</span>(val)
+  <span class="text-blue-400">if</span> num <span class="text-blue-400">then</span> <span class="text-red-400">return</span> num <span class="text-blue-400">end</span>
+
+  <span class="text-blue-400">if</span> val:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%{"</span>) <span class="text-blue-400">or</span> val:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%["</span>) <span class="text-blue-400">then</span>
+    <span class="text-blue-400">local</span> ok, parsed = <span class="text-orange-400">pcall</span>(json.<span class="text-yellow-400">decode</span>, val)
+    <span class="text-blue-400">if</span> ok <span class="text-blue-400">and</span> parsed <span class="text-blue-400">then</span> <span class="text-red-400">return</span> parsed <span class="text-blue-400">end</span>
+  <span class="text-blue-400">end</span>
+
+  <span class="text-red-400">return</span> val:<span class="text-yellow-400">gsub</span>(<span class="text-green-400">'^"(.*)"$'</span>, <span class="text-green-400">"%1"</span>):<span class="text-yellow-400">gsub</span>(<span class="text-green-400">"^'(.*)'$"</span>, <span class="text-green-400">"%1"</span>)
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">function</span> M.<span class="text-yellow-400">load</span>(filename, opts)
+  <span class="text-blue-400">if</span> M.<span class="text-white">_cache</span> <span class="text-blue-400">then</span> <span class="text-red-400">return</span> M.<span class="text-white">_cache</span> <span class="text-blue-400">end</span>
+
+  opts = opts <span class="text-blue-400">or</span> {}
+  <span class="text-blue-400">local</span> required = opts.<span class="text-white">required</span> <span class="text-blue-400">or</span> {}
+  <span class="text-blue-400">local</span> defaults = opts.<span class="text-white">defaults</span> <span class="text-blue-400">or</span> {}
+  <span class="text-blue-400">local</span> export = opts.<span class="text-white">export</span> ~= <span class="text-white">false</span>
+
+  <span class="text-blue-400">local</span> f = <span class="text-orange-400">assert</span>(<span class="text-orange-400">io.open</span>(filename, <span class="text-green-400">"r"</span>), <span class="text-green-400">"Cannot open "</span> .. filename)
+  <span class="text-blue-400">local</span> content = f:<span class="text-yellow-400">read</span>(<span class="text-green-400">"*a"</span>)
+  f:<span class="text-yellow-400">close</span>()
+
+  <span class="text-blue-400">local</span> current_key = <span class="text-white">nil</span>
+  <span class="text-blue-400">local</span> current_val_lines = {}
+  <span class="text-blue-400">for</span> line <span class="text-blue-400">in</span> content:<span class="text-yellow-400">gmatch</span>(<span class="text-green-400">"[^\r\n]+"</span>) <span class="text-blue-400">do</span>
+    <span class="text-blue-400">local</span> key, value = line:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%s*([%w_]+)%s*=%s*(.+)%s*$"</span>)
+
+    <span class="text-blue-400">if</span> key <span class="text-blue-400">and</span> value <span class="text-blue-400">then</span>
+      <span class="text-blue-400">if</span> value:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%{"</span>) <span class="text-blue-400">or</span> value:<span class="text-yellow-400">match</span>(<span class="text-green-400">"^%["</span>) <span class="text-blue-400">then</span>
+        <span class="text-gray-500">-- Begin multi-line JSON</span>
+        current_key = key
+        current_val_lines = { value }
+      <span class="text-blue-400">else</span>
+        env[key] = <span class="text-yellow-400">cast_value</span>(value)
+      <span class="text-blue-400">end</span>
+    <span class="text-blue-400">elseif</span> current_key <span class="text-blue-400">then</span>
+      <span class="text-gray-500">-- Continue collecting multi-line JSON</span>
+      <span class="text-orange-400">table.insert</span>(current_val_lines, line)
+
+      <span class="text-blue-400">local</span> joined = <span class="text-orange-400">table.concat</span>(current_val_lines, <span class="text-green-400">"\n"</span>)
+      <span class="text-blue-400">local</span> ok, parsed = <span class="text-orange-400">pcall</span>(json.<span class="text-yellow-400">decode</span>, joined)
+      <span class="text-blue-400">if</span> ok <span class="text-blue-400">and</span> parsed <span class="text-blue-400">then</span>
+        env[current_key] = parsed
+        current_key = <span class="text-white">nil</span>
+        current_val_lines = {}
+      <span class="text-blue-400">end</span>
+    <span class="text-blue-400">end</span>
+  <span class="text-blue-400">end</span>
+
+  <span class="text-blue-400">for</span> _, k <span class="text-blue-400">in</span> <span class="text-orange-400">ipairs</span>(required) <span class="text-blue-400">do</span>
+    <span class="text-blue-400">if</span> env[k] == <span class="text-white">nil</span> <span class="text-blue-400">then</span>
+      <span class="text-orange-400">error</span>(<span class="text-green-400">"Missing required env variable: "</span> .. k)
+    <span class="text-blue-400">end</span>
+  <span class="text-blue-400">end</span>
+
+  M.<span class="text-white">_cache</span> = env
+  <span class="text-red-400">return</span> env
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">function</span> M.<span class="text-yellow-400">reset</span>()
+  M.<span class="text-white">_cache</span> = <span class="text-white">nil</span>
+<span class="text-blue-400">end</span>
+
+<span class="text-red-400">return</span> M
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`dev.env` / `prod.env`</strong>: These files store environment variables for development and production modes, respectively. They include settings for debugging, port, feature flags, API rate limits, database connections, Redis, and JWT configurations. Values can be simple types or multi-line JSON structures.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">DEBUG</span>=<span class="text-white">false</span>
+<span class="text-blue-400">PORT</span>=3000
+
+<span class="text-blue-400">FEATURE_FLAGS</span>={<span class="text-green-400">"chat"</span>:<span class="text-white">true</span>,<span class="text-green-400">"payments"</span>:<span class="text-white">false</span>}
+<span class="text-blue-400">ALLOWED_IPS</span>=[<span class="text-green-400">"127.0.0.1"</span>, <span class="text-green-400">"192.168.1.1"</span>]
+
+<span class="text-blue-400">RATE_LIMITING_WINDOW_IN_SECS</span>=10
+<span class="text-blue-400">RATE_LIMITING_MAX_REQUESTS</span>=5
+
+<span class="text-blue-400">CONNECTION_MODE</span>=<span class="text-green-400">"async"</span>
+
+<span class="text-blue-400">DB_CONFIG</span>={
+  <span class="text-green-400">"host"</span>: <span class="text-green-400">"localhost"</span>,
+  <span class="text-green-400">"port"</span>: 5432,
+  <span class="text-green-400">"user"</span>: <span class="text-green-400">"game_player"</span>,
+  <span class="text-green-400">"password"</span>: <span class="text-green-400">"1234"</span>,
+  <span class="text-green-400">"dbname"</span>: <span class="text-green-400">"game"</span>
+}
+
+<span class="text-blue-400">REDIS_CONFIG</span>={
+  <span class="text-green-400">"host"</span>: <span class="text-green-400">"127.0.0.1"</span>,
+  <span class="text-green-400">"port"</span>: 6379,
+  <span class="text-green-400">"password"</span>: <span class="text-green-400">"supersecret"</span>,
+  <span class="text-green-400">"db"</span>: 0,
+  <span class="text-green-400">"use_tls"</span>: <span class="text-white">false</span>
+}
+<span class="text-blue-400">STORE_CONFIG</span>={
+  <span class="text-green-400">"allow_multiple"</span>: <span class="text-white">false</span>,
+  <span class="text-green-400">"cleanup_expired"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"max_session_age"</span>: 604800,
+  <span class="text-green-400">"cleanup_interval"</span>: 3600,
+  <span class="text-green-400">"secrete"</span>: <span class="text-green-400">"dawn_sever_key"</span>
+}
+<span class="text-blue-400">JWT_CONFIG</span>={
+  <span class="text-green-400">"secret"</span>: <span class="text-green-400">"dawnsecretekey"</span>,
+  <span class="text-green-400">"issuer"</span>: <span class="text-green-400">"my-service"</span>,
+  <span class="text-green-400">"audience"</span>: <span class="text-green-400">"my-client-app"</span>,
+  <span class="text-green-400">"allow_multiple"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"cleanup_expired"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"access_token_expiration"</span>: 1800,
+  <span class="text-green-400">"refresh_token_expiration"</span>: 259200,
+  <span class="text-green-400">"max_session_age"</span>: 604800,
+  <span class="text-green-400">"cleanup_interval"</span>: 1800
+}
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`.gitignore`</strong>: Specifies intentionally untracked files that Git should ignore.</li>
+                        <li><strong>`LICENSE`</strong>: Contains the licensing information for your project.</li>
+                    </ul>
+                </div>
+
+                <!-- config directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`config/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        This directory holds crucial configuration files for your Dawn application.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`dependencies.json`</strong>: This JSON file lists the LuaRocks modules that your project depends on. When you run `dawn install`, the CLI reads this file and installs all specified dependencies.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+[
+  { "name": "dawn"},
+  { "name": "dawn_db"},
+  { "name": "dkjson" },
+  { "name": "lua-zlib" },
+  { "name": "luasocket" },
+  { "name": "lustache" },
+  { "name": "luv" },
+  { "name": "net-url" },
+  { "name": "redis-lua" },
+  { "name": "uwebsockets"}
+]
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`get_env.lua`</strong>: This module is responsible for loading the appropriate environment configuration based on the `MODE` environment variable (defaults to `dev`). It uses `env.lua` to parse the `.env` files.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> json = <span class="text-orange-400">require</span>(<span class="text-green-400">"dkjson"</span>)
+<span class="text-blue-400">local</span> env = <span class="text-orange-400">require</span>(<span class="text-green-400">"env"</span>)
+
+<span class="text-blue-400">local</span> mode = <span class="text-orange-400">os.getenv</span>(<span class="text-green-400">"MODE"</span>) <span class="text-blue-400">or</span> <span class="text-green-400">"dev"</span>
+<span class="text-blue-400">local</span> config = env.<span class="text-yellow-400">load</span>(mode == <span class="text-green-400">"prod"</span> <span class="text-blue-400">and</span> <span class="text-green-400">"prod.env"</span> <span class="text-blue-400">or</span> <span class="text-green-400">"dev.env"</span>, {
+  <span class="text-white">defaults</span> = { <span class="text-white">TIMEOUT</span> = 60 },
+  <span class="text-white">export</span> = <span class="text-white">false</span>
+})
+
+<span class="text-red-400">return</span> config
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`server_config.lua`</strong>: This file defines the core configuration for your Dawn server, including port, log level, static file serving, multipart parser options for file uploads, token store settings, and WebSocket state management. It loads environment variables via `get_env.lua` to adapt configurations based on the environment (development or production).
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-gray-500">-- Initialize a logger</span>
+<span class="text-blue-400">local</span> store = <span class="text-orange-400">require</span>(<span class="text-green-400">'dawn'</span>).token_store
+
+<span class="text-blue-400">local</span> log_level = <span class="text-orange-400">require</span>(<span class="text-green-400">'utils.logger'</span>).LogLevel
+
+<span class="text-blue-400">local</span> env = <span class="text-orange-400">require</span>(<span class="text-green-400">'config.get_env'</span>)
+
+<span class="text-blue-400">local</span> multiparser_opts_configurations = {
+  <span class="text-white">max_memory_size</span> = 1024 * 512, <span class="text-gray-500">-- ⬅️ Max allowed memory per part (512 KB); raises error if exceeded (only applies if stream_to_disk = false)</span>
+
+  <span class="text-white">decode_base64</span> = <span class="text-white">false</span>,        <span class="text-gray-500">-- ⬅️ If true, decodes base64-encoded parts (when Content-Transfer-Encoding is base64)</span>
+
+  <span class="text-white">decode_gzip</span> = <span class="text-white">true</span>,           <span class="text-gray-500">-- ⬅️ If true, automatically decompresses parts with Content-Type: application/gzip</span>
+
+  <span class="text-white">stream_to_disk</span> = <span class="text-white">true</span>,        <span class="text-gray-500">-- ⬅️ If true, writes file parts directly to disk instead of keeping them in memory</span>
+
+  <span class="text-white">auto_save_dir</span> = <span class="text-green-400">"./uploads"</span>,  <span class="text-gray-500">-- ⬅️ Directory to save uploaded file parts when stream_to_disk is enabled</span>
+
+  <span class="text-white">on_start_part</span> = <span class="text-blue-400">function</span>(part)
+    <span class="text-orange-400">print</span>(<span class="text-green-400">"Started part:"</span>, part.<span class="text-white">name</span>)
+  <span class="text-blue-400">end</span>,                          <span class="text-gray-500">-- ⬅️ Optional callback called at the start of each part (e.g., before body content is parsed)</span>
+
+  <span class="text-white">on_end_part</span> = <span class="text-blue-400">function</span>(part)
+    <span class="text-orange-400">print</span>(<span class="text-green-400">"Finished part:"</span>, part.<span class="text-white">name</span>, part.<span class="text-white">size</span>, part.<span class="text-white">path</span>)
+  <span class="text-blue-400">end</span>,                          <span class="text-gray-500">-- ⬅️ Optional callback called after a part is fully processed (headers + body)</span>
+
+  <span class="text-white">progress_callback</span> = <span class="text-blue-400">function</span>(bytes)
+    <span class="text-orange-400">print</span>(<span class="text-green-400">"Uploaded bytes:"</span>, bytes)
+  <span class="text-blue-400">end</span>,                          <span class="text-gray-500">-- ⬅️ Optional function that receives total bytes read so far (for progress bars or logging)</span>
+
+  <span class="text-gray-500">-- encryption_key = "mysecretkey", -- ⬅️ (Optional) If used, you could enable decryption logic for encrypted file uploads</span>
+
+  <span class="text-gray-500">-- cleanup = true, -- ⬅️ Reserved: if implemented, would remove temp files after parsing (currently unused)</span>
+
+  <span class="text-gray-500">-- nested = true -- ⬅️ (Used in `accumulate`) Enables parsing of nested field names like "user[name]" into form.user.name</span>
+}
+
+<span class="text-blue-400">local</span> store_config = {
+    <span class="text-white">store</span> = store, <span class="text-gray-500">-- uncomment if you want to store persistence to use json file </span>
+    <span class="text-white">cleanup_interval</span> = 3600,     <span class="text-gray-500">-- ⬅️ Interval in seconds to trigger periodic cleanup (can be used by a scheduler or loop elsewhere in app).</span>
+}
+
+<span class="text-gray-500">-- Define server configuration</span>
+<span class="text-blue-400">local</span> server_config = {
+    <span class="text-white">port</span> = env <span class="text-blue-400">and</span> env.<span class="text-white">PORT</span> <span class="text-blue-400">or</span> 8080,
+    <span class="text-white">level</span> = env <span class="text-blue-400">and</span> env.<span class="text-white">DEBUG</span> == <span class="text-white">true</span> <span class="text-blue-400">and</span> log_level.<span class="text-white">DEBUG</span> <span class="text-blue-400">or</span> log_level.<span class="text-white">WARN</span>, <span class="text-gray-500">-- Set log level based on environment variable or default to 'info'</span>
+    <span class="text-white">logger</span> = <span class="text-white">nil</span>,
+    <span class="text-gray-500">-- Configure static file serving</span>
+    <span class="text-gray-500">-- Each entry is a table with 'route_prefix' and 'directory_path'</span>
+    <span class="text-white">static_configs</span> = {
+        { <span class="text-white">route_prefix</span> = <span class="text-green-400">"/static"</span>, <span class="text-white">directory_path</span> = <span class="text-green-400">"./public"</span> },
+        <span class="text-gray-500">-- You can add more static directories if needed:</span>
+        <span class="text-gray-500">-- { route_prefix = "/assets", directory_path = "./assets" },</span>
+    },
+
+    <span class="text-white">multipart_parser_options</span> = multiparser_opts_configurations,
+
+    <span class="text-white">token_store</span> = store_config,
+
+    <span class="text-white">state_management_options</span> = {
+        <span class="text-white">handlers</span> = <span class="text-orange-400">require</span>(<span class="text-green-400">'websockets.handlers._index'</span>) <span class="text-blue-400">or</span> {},
+          <span class="text-white">state_management_options</span> = env <span class="text-blue-400">and</span> env.<span class="text-white">REDIS_CONFIG</span> <span class="text-blue-400">and</span> env.<span class="text-white">REDIS_CONFIG</span> <span class="text-blue-400">or</span> {<span class="text-white">session_timeout</span> = 3600, <span class="text-gray-500">-- Session timeout in seconds</span>
+          <span class="text-white">cleanup_interval</span> = 60  }, <span class="text-gray-500">-- How often to clean up expired sessions</span>
+           <span class="text-white">state</span> = {
+          <span class="text-white">state_management</span> = <span class="text-orange-400">require</span>(<span class="text-green-400">'websockets.state_management._index'</span>)
+      }
+    },
+}
+
+<span class="text-red-400">return</span> server_config
+                                </code></pre>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- lib directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`lib/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        Contains utility and library files, such as common layout components.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`main_layout.lua`</strong>: (Not provided yet, but would define the main HTML layout structure that your views will use.)</li>
+                    </ul>
+                </div>
+
+                <!-- models directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`models/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        Houses your application's data models, typically used with `dawn_db` for ORM functionalities.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`init_models.lua`</strong>: (Not provided yet, but would initialize and expose all your defined ORM models.)</li>
+                    </ul>
+                </div>
+
+                <!-- public directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`public/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        This directory serves static assets like CSS, JavaScript, images, and other client-side files. These files are typically served directly by the web server.
+                    </p>
+                </div>
+
+                <!-- routes directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`routes/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        Defines your application's HTTP routes and their corresponding handlers.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`_index.lua`</strong>: This module acts as the central orchestrator for all your application's routes. It loads individual route modules (like `auth_routes`, `_system_routes`, `ws_routes`) and provides functions (`load` and `registerAllRoutes`) to initialize them with the server instance and register their defined routes. This design promotes modularity and organization of your routing logic.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> M = {}
+M.<span class="text-white">__index</span> = M
+
+<span class="text-gray-500">-- Route modules</span>
+M.<span class="text-white">auth</span> = <span class="text-orange-400">require</span>(<span class="text-green-400">'routes.auth_routes'</span>)
+M.<span class="text-white">system</span> = <span class="text-orange-400">require</span>(<span class="text-green-400">'routes._system_routes'</span>)
+<span class="text-gray-500">-- M.ws = require('routes.ws_routes')</span>
+
+<span class="text-gray-500">-- Initializes the routes with the server instance</span>
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">load</span>(server)
+    <span class="text-blue-400">local</span> instance = <span class="text-orange-400">setmetatable</span>({}, M)
+    <span class="text-blue-400">for</span> name, route <span class="text-blue-400">in</span> <span class="text-orange-400">pairs</span>(M) <span class="text-blue-400">do</span>
+      <span class="text-blue-400">if</span> <span class="text-orange-400">type</span>(route) == <span class="text-green-400">"table"</span> <span class="text-blue-400">and</span> route.<span class="text-white">new</span> <span class="text-blue-400">then</span>
+          instance[name] = route:<span class="text-yellow-400">new</span>(server)
+      <span class="text-blue-400">end</span>
+    <span class="text-blue-400">end</span>
+    <span class="text-red-400">return</span> instance
+<span class="text-blue-400">end</span>
+
+<span class="text-gray-500">-- Registers all initialized routes</span>
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">registerAllRoutes</span>()
+    <span class="text-blue-400">for</span> name, route <span class="text-blue-400">in</span> <span class="text-orange-400">pairs</span>(self) <span class="text-blue-400">do</span>
+      <span class="text-blue-400">if</span> <span class="text-orange-400">type</span>(route) == <span class="text-green-400">"table"</span> <span class="text-blue-400">and</span> route.<span class="text-white">routes</span> <span class="text-blue-400">then</span>
+          <span class="text-orange-400">assert</span>(route.<span class="text-white">server</span>, <span class="text-green-400">"Route '"</span> .. name .. <span class="text-green-400">"' is not initialized with a server instance"</span>)
+          route:<span class="text-yellow-400">routes</span>()
+      <span class="text-blue-400">end</span>
+    <span class="text-blue-400">end</span>
+<span class="text-blue-400">end</span>
+
+<span class="text-red-400">return</span> M
+<span class="text-gray-500">-- This module serves as a central index for all route modules in the application.</span>
+<span class="text-gray-500">-- It dynamically loads and initializes each route module, allowing for easy management and registration of routes.</span>
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`auth_routes.lua`</strong>: This module defines routes specifically for authentication-related functionalities. It demonstrates how to implement a login endpoint, generate and manage JWT (JSON Web Tokens) for access and refresh, and apply JWT protection middleware to API routes. It integrates with `auth.purejwt` for token operations and `auth.token_store` for refresh token persistence.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> json = <span class="text-orange-400">require</span>(<span class="text-green-400">'dkjson'</span>)
+<span class="text-blue-400">local</span> jwt = <span class="text-orange-400">require</span>(<span class="text-green-400">"auth.purejwt"</span>)
+<span class="text-blue-400">local</span> store = <span class="text-orange-400">require</span>(<span class="text-green-400">"auth.token_store"</span>)
+<span class="text-blue-400">local</span> jwtMilddleware = <span class="text-orange-400">require</span>(<span class="text-green-400">'auth.jwt_protect'</span>)
+<span class="text-blue-400">local</span> refresh_handler = <span class="text-orange-400">require</span>(<span class="text-green-400">"routes.middlewares.refresh_handler"</span>)
+
+<span class="text-blue-400">local</span> env_var = <span class="text-orange-400">require</span>(<span class="text-green-400">'config.get_env'</span>)
+
+ <span class="text-blue-400">local</span> jwt_config = env_var <span class="text-blue-400">and</span> env_var.<span class="text-white">JWT_CONFIG</span>  <span class="text-blue-400">or</span> {}
+ <span class="text-blue-400">local</span> store_config = env_var <span class="text-blue-400">and</span> env_var.<span class="text-white">STORE_CONFIG</span>  <span class="text-blue-400">or</span> {}
+
+<span class="text-blue-400">local</span> M = {}
+M.<span class="text-white">__index</span> = M
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">new</span>(server)
+  <span class="text-blue-400">local</span> self = <span class="text-orange-400">setmetatable</span>({}, M)
+  self.<span class="text-white">server</span> = server
+  <span class="text-red-400">return</span> self
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">routes</span>()
+
+  <span class="text-gray-500">-- ✅ Extract and validate critical JWT options early</span>
+  <span class="text-blue-400">local</span> jwt_secret = jwt_config.<span class="text-white">secret</span> <span class="text-blue-400">or</span> <span class="text-white">nil</span>
+  <span class="text-orange-400">assert</span>(jwt_secret <span class="text-blue-400">and</span> jwt_secret ~= <span class="text-green-400">""</span>, <span class="text-green-400">"JWT secret must be provided"</span>)
+
+  store.<span class="text-yellow-400">init</span>(store_config)
+
+  <span class="text-blue-400">local</span> jwt_options = {
+    <span class="text-white">secret</span> = jwt_secret,
+    <span class="text-white">issuer</span> = jwt_config.<span class="text-white">issuer</span> <span class="text-blue-400">or</span> <span class="text-white">nil</span>,       <span class="text-gray-500">-- can be nil</span>
+    <span class="text-white">audience</span> = jwt_config[<span class="text-green-400">'audience'</span>] <span class="text-blue-400">or</span>  <span class="text-white">nil</span>,   <span class="text-gray-500">-- can be nil</span>
+    <span class="text-white">verify_exp</span> = <span class="text-white">true</span>,
+    <span class="text-white">verify_iss</span> = <span class="text-white">true</span>,
+    <span class="text-white">verify_aud</span> = <span class="text-white">true</span>,
+    <span class="text-white">custom_claims</span> = { <span class="text-white">role</span> = <span class="text-green-400">"admin"</span> }
+  }
+
+  <span class="text-gray-500">-- ✅ Apply JWT middleware after CORS to ensure headers are accessible</span>
+  self.<span class="text-white">server</span>:<span class="text-yellow-400">use</span>(jwtMilddleware(jwt_options), <span class="text-green-400">"/api"</span>)
+
+  <span class="text-gray-500">-- ✅ /auth/login endpoint (excluded from JWT protection)</span>
+  self.<span class="text-white">server</span>:<span class="text-yellow-400">post</span>(<span class="text-green-400">"/auth/login"</span>, <span class="text-blue-400">function</span>(req, res)
+    <span class="text-blue-400">local</span> body = req.<span class="text-white">body</span> <span class="text-blue-400">or</span> {}
+    <span class="text-blue-400">if</span> <span class="text-orange-400">type</span>(body) == <span class="text-green-400">"string"</span> <span class="text-blue-400">then</span>
+      <span class="text-blue-400">local</span> ok, parsed = <span class="text-orange-400">pcall</span>(json.<span class="text-yellow-400">decode</span>, body)
+      <span class="text-blue-400">if</span> ok <span class="text-blue-400">then</span> body = parsed <span class="text-blue-400">else</span> body = {} <span class="text-blue-400">end</span>
+    <span class="text-blue-400">end</span>
+
+    <span class="text-blue-400">local</span> username = body.<span class="text-white">username</span>
+    <span class="text-blue-400">local</span> password = body.<span class="text-white">password</span>
+
+    <span class="text-blue-400">if</span> username ~= <span class="text-green-400">"admin"</span> <span class="text-blue-400">or</span> password ~= <span class="text-green-400">"secret"</span> <span class="text-blue-400">then</span>
+      <span class="text-red-400">return</span> res:<span class="text-yellow-400">writeStatus</span>(401):<span class="text-yellow-400">send</span>(json.<span class="text-yellow-400">encode</span>({ <span class="text-white">error</span> = <span class="text-green-400">"Invalid credentials"</span> }))
+    <span class="text-blue-400">end</span>
+
+    <span class="text-blue-400">local</span> now = <span class="text-orange-400">os.time</span>()
+    <span class="text-blue-400">local</span> user_id = username
+
+    
+
+    <span class="text-gray-500">-- ✅ Use the exact same `secret`, `issuer`, and `audience` as configured</span>
+    <span class="text-blue-400">local</span> access_token = jwt.<span class="text-yellow-400">encode</span>({
+      <span class="text-white">sub</span> = user_id,
+      <span class="text-white">role</span> = <span class="text-green-400">"admin"</span>,
+      <span class="text-white">type</span> = <span class="text-green-400">"access"</span>,
+      <span class="text-white">iat</span> = now,
+      <span class="text-white">exp</span> = now + (jwt_config.<span class="text-white">access_token_expiration</span> <span class="text-blue-400">or</span> 1800),
+      <span class="text-white">iss</span> = jwt_config[<span class="text-green-400">'issuer'</span>] <span class="text-blue-400">or</span> <span class="text-white">nil</span>,
+      <span class="text-white">aud</span> = jwt_config[<span class="text-green-400">'audience'</span>] <span class="text-blue-400">or</span> <span class="text-white">nil</span>
+    }, jwt_secret)
+
+    <span class="text-blue-400">local</span> refresh_token = jwt.<span class="text-yellow-400">encode</span>({
+      <span class="text-white">sub</span> = user_id,
+      <span class="text-white">type</span> = <span class="text-green-400">"refresh"</span>,
+      <span class="text-white">iat</span> = now,
+      <span class="text-white">exp</span> = now + (jwt_config.<span class="text-white">refresh_token_expiration</span> <span class="text-blue-400">or</span> 1800),
+    }, jwt_secret)
+
+    <span class="text-gray-500">-- ✅ Save refresh token with extra context metadata</span>
+    <span class="text-blue-400">local</span> metadata = {
+      <span class="text-white">device_id</span> = req.<span class="text-white">_raw</span>:<span class="text-yellow-400">getHeader</span>(<span class="text-green-400">"x-device-id"</span>) <span class="text-blue-400">or</span> <span class="text-green-400">"unknown"</span>,
+      <span class="text-white">ip</span> = req.<span class="text-white">_raw</span>:<span class="text-yellow-400">getHeader</span>(<span class="text-green-400">"x-real-ip"</span>) <span class="text-blue-400">or</span> req:<span class="text-yellow-400">getHeader</span>(<span class="text-green-400">"x-forwarded-for"</span>) <span class="text-blue-400">or</span> <span class="text-green-400">"unknown"</span>,
+      <span class="text-white">agent</span> = req.<span class="text-white">_raw</span>:<span class="text-yellow-400">getHeader</span>(<span class="text-green-400">"user-agent"</span>) <span class="text-blue-400">or</span> <span class="text-green-400">"unknown"</span>
+    }
+
+
+    store.<span class="text-yellow-400">save_refresh_token</span>(user_id, refresh_token, metadata)
+
+    res:<span class="text-yellow-400">writeHeader</span>(<span class="text-green-400">"Content-Type"</span>, <span class="text-green-400">"application/json"</span>)
+    res:<span class="text-yellow-400">send</span>(json.<span class="text-yellow-400">encode</span>({
+      <span class="text-white">access_token</span> = access_token,
+      <span class="text-white">refresh_token</span> = refresh_token
+    }))
+  <span class="text-blue-400">end</span>)
+
+
+    <span class="text-blue-400">self</span>.<span class="text-white">server</span>:<span class="text-yellow-400">post</span>(<span class="text-green-400">"/auth/refresh"</span>, refresh_handler(jwt_options))
+
+<span class="text-blue-400">end</span>
+
+<span class="text-red-400">return</span> M
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`ws_routes.lua`</strong>: This module is intended for defining WebSocket-specific routes and their handlers. While currently a placeholder, it demonstrates how to establish a WebSocket endpoint using `self.server:ws("/ws", function(req, res) ... end)`. In a full implementation, this would manage real-time communication channels, presence, and pub/sub events.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">local</span> json = <span class="text-orange-400">require</span>(<span class="text-green-400">'dkjson'</span>)
+
+<span class="text-gray-500">-- this module is still not added to the main routes index</span>
+<span class="text-gray-500">-- it is a placeholder for WebSocket routes</span>
+<span class="text-blue-400">local</span> M = {}
+M.<span class="text-white">__index</span> = M
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">new</span>(server)
+  <span class="text-blue-400">local</span> self = <span class="text-orange-400">setmetatable</span>({}, M)
+  self.<span class="text-white">server</span> = server
+  <span class="text-red-400">return</span> self
+<span class="text-blue-400">end</span>
+
+<span class="text-blue-400">function</span> M:<span class="text-yellow-400">routes</span>()
+  <span class="text-gray-500">-- Your routes go here, e.g.:</span>
+  self.<span class="text-white">server</span>:<span class="text-yellow-400">ws</span>(<span class="text-green-400">"/ws"</span>, <span class="text-blue-400">function</span>(req, res)
+  <span class="text-blue-400">end</span>)
+<span class="text-blue-400">end</span>
+
+<span class="text-red-400">return</span> M
+                                </code></pre>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- views/layouts directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`views/layouts/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        Stores your application's HTML templates, often using the Lustache templating engine.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`default.mustache`</strong>: The default Lustache template file, often serving as the base layout for all other views.</li>
+                    </ul>
+                </div>
+
+                <!-- websockets directory -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">`websockets/` Directory</h3>
+                    <p class="text-lg text-steel-gray mb-4">
+                        Contains logic and handlers for real-time WebSocket communication.
+                    </p>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`handlers/`</strong>: (Subdirectory for individual WebSocket event handlers.)</li>
+                        <li><strong>`state_management/`</strong>: (Subdirectory for managing WebSocket connection states or presence.)</li>
+                    </ul>
+                </div>
+
+                <!-- Environment Files -->
+                <div class="mb-8">
+                    <h3 class="font-heading text-2xl font-bold text-secondary mb-4">Environment Specific Files</h3>
+                    <ul class="list-disc list-inside text-lg text-steel-gray space-y-3 ml-4">
+                        <li><strong>`dev.env`</strong>: Configuration file for the development environment.
+                            <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mt-4">
+                                <button class="copy-button" onclick="copyCode(this)">
+                                    <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                                </button>
+                                <div class="absolute -top-3 left-6 flex space-x-2">
+                                    <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                                    <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                                    <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                                </div>
+                                <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-blue-400">DEBUG</span>=<span class="text-white">false</span>
+<span class="text-blue-400">PORT</span>=3000
+
+<span class="text-blue-400">FEATURE_FLAGS</span>={<span class="text-green-400">"chat"</span>:<span class="text-white">true</span>,<span class="text-green-400">"payments"</span>:<span class="text-white">false</span>}
+<span class="text-blue-400">ALLOWED_IPS</span>=[<span class="text-green-400">"127.0.0.1"</span>, <span class="text-green-400">"192.168.1.1"</span>]
+
+<span class="text-blue-400">RATE_LIMITING_WINDOW_IN_SECS</span>=10
+<span class="text-blue-400">RATE_LIMITING_MAX_REQUESTS</span>=5
+
+<span class="text-blue-400">CONNECTION_MODE</span>=<span class="text-green-400">"async"</span>
+
+<span class="text-blue-400">DB_CONFIG</span>={
+  <span class="text-green-400">"host"</span>: <span class="text-green-400">"localhost"</span>,
+  <span class="text-green-400">"port"</span>: 5432,
+  <span class="text-green-400">"user"</span>: <span class="text-green-400">"game_player"</span>,
+  <span class="text-green-400">"password"</span>: <span class="text-green-400">"1234"</span>,
+  <span class="text-green-400">"dbname"</span>: <span class="text-green-400">"game"</span>
+}
+
+<span class="text-blue-400">REDIS_CONFIG</span>={
+  <span class="text-green-400">"host"</span>: <span class="text-green-400">"127.0.0.1"</span>,
+  <span class="text-green-400">"port"</span>: 6379,
+  <span class="text-green-400">"password"</span>: <span class="text-green-400">"supersecret"</span>,
+  <span class="text-green-400">"db"</span>: 0,
+  <span class="text-green-400">"use_tls"</span>: <span class="text-white">false</span>
+}
+<span class="text-blue-400">STORE_CONFIG</span>={
+  <span class="text-green-400">"allow_multiple"</span>: <span class="text-white">false</span>,
+  <span class="text-green-400">"cleanup_expired"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"max_session_age"</span>: 604800,
+  <span class="text-green-400">"cleanup_interval"</span>: 3600,
+  <span class="text-green-400">"secrete"</span>: <span class="text-green-400">"dawn_sever_key"</span>
+}
+<span class="text-blue-400">JWT_CONFIG</span>={
+  <span class="text-green-400">"secret"</span>: <span class="text-green-400">"dawnsecretekey"</span>,
+  <span class="text-green-400">"issuer"</span>: <span class="text-green-400">"my-service"</span>,
+  <span class="text-green-400">"audience"</span>: <span class="text-green-400">"my-client-app"</span>,
+  <span class="text-green-400">"allow_multiple"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"cleanup_expired"</span>: <span class="text-white">true</span>,
+  <span class="text-green-400">"access_token_expiration"</span>: 1800,
+  <span class="text-green-400">"refresh_token_expiration"</span>: 259200,
+  <span class="text-green-400">"max_session_age"</span>: 604800,
+  <span class="text-green-400">"cleanup_interval"</span>: 1800
+}
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li><strong>`prod.env`</strong>: Similar to `dev.env` but contains configurations optimized for a production environment.</li>
+                    </ul>
+                </div>
+
+            </section>
+
+            <section id="cli-reference" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">Dawn CLI Reference</h2>
+                <p class="text-lg text-steel-gray mb-4">
+                    The Dawn Command Line Interface (CLI) is your primary tool for managing Dawn projects, from creation to development and deployment.
+                </p>
+                <div class="bg-primary p-8 rounded-lg shadow-2xl relative w-full mb-6">
+                    <button class="copy-button" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> <span class="copy-text">Copy Code</span>
+                    </button>
+                    <div class="absolute -top-3 left-6 flex space-x-2">
+                        <span class="w-3 h-3 bg-coral-pink rounded-full"></span>
+                        <span class="w-3 h-3 bg-soft-yellow rounded-full"></span>
+                        <span class="w-3 h-3 bg-tertiary rounded-full"></span>
+                    </div>
+                    <pre class="code-block-placeholder text-left text-sm md:text-base"><code>
+<span class="text-gray-500"># Dawn Web Framework CLI</span>
+
+<span class="text-white">Usage:</span>
+  <span class="text-blue-400">dawn new</span> <span class="text-green-400"><project_name></span>             <span class="text-gray-500"># Create a new project</span>
+  <span class="text-blue-400">dawn install</span>                     <span class="text-gray-500"># Install LuaRocks dependencies from config</span>
+  <span class="text-blue-400">dawn serve</span>                       <span class="text-gray-500"># Run the dev server</span>
+  <span class="text-blue-400">dawn generate</span> <span class="text-green-400"><type> <name></span>       <span class="text-gray-500"># Generate controller/model/middleware/fcomp/route/migration</span>
+  <span class="text-blue-400">dawn db migrate</span> <span class="text-green-400">[<migration_file>]</span> <span class="text-gray-500"># Run database migrations (optional: specify file)</span>
+  <span class="text-blue-400">dawn db create_table</span> <span class="text-green-400"><model_name></span>  <span class="text-gray-500"># Create a specific table based on model</span>
+  <span class="text-blue-400">dawn db drop_table</span> <span class="text-green-400"><model_name></span>    <span class="text-gray-500"># Drop a specific table based on model</span>
+  <span class="text-blue-400">dawn test</span>                        <span class="text-gray-500"># Run unit tests</span>
+  <span class="text-blue-400">dawn version</span>                     <span class="text-gray-500"># Show version</span>
+                    </code></pre>
+                </div>
+                <h3 class="font-heading text-2xl font-bold text-secondary mb-4 mt-8">Understanding the `build_dawn.sh` script</h3>
+                <p class="text-lg text-steel-gray mb-4">
+                    The `build_dawn.sh` script automates the setup of the Dawn Web Framework's development environment on Debian-based systems. Here's a breakdown of its key functionalities:
+                </p>
+                <ul class="list-disc list-inside text-lg text-steel-gray ml-4 space-y-2">
+                    <li><strong>Configuration:</strong> Defines terminal colors and icons for clear visual feedback. It also initializes counters to track successful, skipped, and failed operations.</li>
+                    <li><strong>Helper Functions:</strong> Includes functions for logging headers (`log_header`), confirming actions with the user (`confirm_action`, which can be skipped with `-Y` or `--yes-to-all`), checking if APT packages or commands exist (`is_apt_package_installed`, `command_exists`), detecting `systemd` (`is_systemd_active`), and handling installations of both APT and LuaRocks packages (`check_and_install_apt_dep`, `check_and_install_luarocks_dep`).</li>
+                    <li><strong>`generate_dawn_lua()`:</strong> This crucial function dynamically creates the `dawn.lua` CLI script directly from within `build_dawn.sh`. This embedded script provides all the `dawn` command-line functionalities.</li>
+                    <li><strong>CLI Setup:</strong> After `dawn.lua` is created, the script makes it executable (`chmod +x dawn.lua`) and moves it to `/usr/local/bin/dawn`, ensuring the `dawn` command is globally available from any terminal location.</li>
+                    <li><strong>System Dependencies Installation:</strong> It uses `apt` to install essential development tools and libraries, including `git`, `cmake`, `python3`, `g++`, `libssl-dev`, `zlib1g-dev`, `libpq-dev` (for PostgreSQL), `lua5.1`, `luajit`, `libluajit-5.1-dev`, and `luarocks`.</li>
+                    <li><strong>LuaRocks Dependencies Installation:</strong> Ensures that Lua-specific dependencies like `luafilesystem`, `dkjson`, and `lustache` are installed via LuaRocks.</li>
+                    <li><strong>PostgreSQL & Redis Configuration:</strong> Installs both PostgreSQL and Redis servers. It then attempts to enable and start their respective services, checking for `systemd` to use the correct service management commands.</li>
+                    <li><strong>Final Summary:</strong> Provides a clear summary of all operations, including any failures, and offers guidance on troubleshooting.</li>
+                </ul>
+            </section>
+
+            <section id="api-reference" class="mb-12">
+                <h2 class="font-heading text-3xl font-bold text-primary mb-4">API Reference</h2>
+                <p class="text-lg text-steel-gray mb-4">
+                    Explore the detailed API documentation for Dawn Framework's modules and functions. This section will link to auto-generated or extensively written API docs once available.
+                </p>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Footer (Reused from Homepage) -->
+    <footer class="bg-primary-lighter py-12 md:py-16 text-dawn-white text-center rounded-none">
+        <div class="container mx-auto px-4">
+            <p class="mb-6 font-heading text-2xl font-bold">Dawn Framework</p>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 text-lg mb-8">
+                <a href="index.html#overview" class="hover:text-secondary transition-colors duration-300">Home</a>
+                <a href="#getting-started" class="hover:text-secondary transition-colors duration-300">Docs</a>
+                <a href="index.html#github" class="hover:text-secondary transition-colors duration-300">GitHub</a>
+                <a href="index.html#privacy" class="hover:text-secondary transition-colors duration-300">Privacy Policy</a>
+                <a href="index.html#terms" class="hover:text-secondary transition-colors duration-300">Terms of Service</a>
+            </div>
+            <div class="flex justify-center space-x-6 text-2xl mb-8">
+                <!-- Social Media Icons (placeholders) -->
+                <a href="#" class="text-dawn-white hover:text-secondary transition-colors duration-300 transform hover:scale-110">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.007-.532A8.318 8.318 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012 10.702v.053a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
+                </a>
+                <a href="#" class="text-dawn-white hover:text-secondary transition-colors duration-300 transform hover:scale-110">
+                    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.47.087.68-.217.68-.485 0-.23-.008-.83-.01-1.93-2.78.6-3.37-1.34-3.37-1.34-.455-1.15-1.11-1.45-1.11-1.45-.9-.6.068-.588.068-.588 1-.07 1.53.996 1.53.996.89 1.527 2.342 1.085 2.91.83.09-.64.35-1.085.64-1.334-2.22-.253-4.555-1.11-4.555-4.94 0-1.09.39-1.98 1.03-2.675-.1-.253-.445-1.26.09-2.646 0 0 .84-.268 2.75 1.025.795-.22 1.63-.33 2.46-.33.83 0 1.665.11 2.46.33 1.91-1.293 2.75-1.025 2.75-1.025.535 1.386.2 2.393.1 2.646.64.695 1.03 1.585 1.03 2.675 0 3.84-2.337 4.68-4.562 4.935.36.31.68.92.68 1.855 0 1.33-.01 2.41-.01 2.735 0 .27.21.57.69.476C19.145 20.208 22 16.452 22 12.017 22 6.484 17.523 2 12 2Z" clip-rule="evenodd"></path></svg>
+                </a>
+            </div>
+            <p class="text-sm text-light-gray">&copy; 2025 Dawn Framework. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" title="Back to Top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // JavaScript for Back to Top Button
+        const backToTopButton = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) { // Show button after scrolling down 300px
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth' // Smooth scroll to top
+            });
+        });
+
+        // JavaScript for Copy to Clipboard functionality
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.nextElementSibling; // Get the <pre> tag after the button
+            const codeText = codeBlock.textContent || codeBlock.innerText; // Get text content
+
+            // Create a temporary textarea to hold the text
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeText.trim(); // Trim to remove extra newlines from pre
+            document.body.appendChild(tempTextArea);
+
+            // Select and copy the text
+            tempTextArea.select();
+            tempTextArea.setSelectionRange(0, 99999); // For mobile devices
+            try {
+                document.execCommand('copy');
+                const originalText = button.querySelector('.copy-text').textContent;
+                button.querySelector('.copy-text').textContent = 'Copied!';
+                setTimeout(() => {
+                    button.querySelector('.copy-text').textContent = originalText;
+                }, 2000); // Revert text after 2 seconds
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                // Fallback for older browsers or restricted environments
+                alert('Copying to clipboard failed. Please copy manually: \n' + codeText);
+            } finally {
+                document.body.removeChild(tempTextArea); // Clean up the temporary textarea
+            }
+        }
+    </script>
+</body>
+</html>

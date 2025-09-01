@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DOM Binding Demo</title>
+  <style>
+    .highlight { font-weight: bold; color: green; }
+    .red { color: red; }
+    .brown { color: brown; }
+  </style>
+</head>
+<body>
+  <h2 ui-bind="title"></h2>
+
+  <input type="text" ui-model="title" placeholder="Update title..." />
+
+  <input type="text" ui-model.lazy="newUserName" placeholder="New user name (lazy)..." />
+
+  <form ui-form="addUser">
+    <button type="submit">Add User</button>
+  </form>
+
+  <hr />
+
+  <button ui-if="showSave">Save</button>
+  <p ui-else="showSave">Saving disabled</p>
+
+  <button ui-class="highlight:isImportant" ui-attr-title="tooltipText">
+    Hover for tooltip
+  </button>
+
+  <div ui-style="backgroundColor:bgColor" style="padding: 10px;">Styled Box</div>
+
+  <div style="margin: 10px 0;">
+    <button ui-page-prev="users">← Prev</button>
+    <button ui-page-next="users">Next →</button>
+  </div>
+
+
+<div ui-loop="user in users" ui-loop-style="odd:color:red;even:color:brown">
+  <p>
+    User: <span ui-bind="user.name"></span>
+    <button ui-on="click:removeUser(user.name)">Remove</button>
+  </p>
+</div>
+
+
+
+  <p ui-loop-empty="users">No users available.</p>
+
+  <script type="module">
+    import {
+      bindStateToDOM,
+      initializeBindings
+    } from '/static/assets/js/domBindings.js'; // Ensure this path is correct for your setup
+
+    import {
+      getState,
+      dispatch,
+    } from '/static/assets/js/clientStore.js'; // Ensure this path is correct for your setup
+
+    // Setup all UI bindings (lazy input, forms, pagination, ui-on click)
+    // This should be called ONLY ONCE when the DOM is ready.
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeBindings(dispatch); // Pass the dispatch function here
+      // Initial render after handlers are set up
+      bindStateToDOM(getState(), dispatch);
+    });
+  </script>
+  <script type="module" src="/reactors/_index.js"></script>
+</body>
+</html>

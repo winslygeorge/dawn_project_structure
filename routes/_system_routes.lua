@@ -5,6 +5,9 @@ local rate_limiting_middleware = require('routes.middlewares.rate_limiting_middl
 
 local json = require('dkjson')
 
+local parseFilters = require("utils.query_filter_parser")
+local PatchStreamer = require("utils.patchStreamer")
+
 local M = {}
 M.__index = M
 
@@ -16,8 +19,11 @@ end
 
 function M:routes()
 
+
+    local patch_streamer = PatchStreamer:new(self.server)
+
   -- Your routes go here, e.g.:
-  -- self.server:use(rate_limiting_middleware())
+    self.server:use(rate_limiting_middleware())
 
     self.server:use(corsMiddleware({
     allow_origin = "*",
@@ -26,9 +32,14 @@ function M:routes()
   }))
 
 
-  self.server:get("/sse/logs", function(req, res, query)
-    print("SSE Log Stream Request Received")
-    
+
+  self.server:get("/sse/patches", function(req, res)
+    local filters = parseFilters(req.query)
+    local sse_id = req.sse_id
+    patch_streamer:addSubscriber(sse_id, filters)
+  end)
+
+  self.server:get("/sse/logs", function(req, res, query)    
     local sse_id = req.sse_id
 
     local opts = {}
@@ -42,7 +53,6 @@ function M:routes()
             opts.component = v
         end
     end
-
 
     self.server.logger:log(1, "New SSE log stream connection opened with ID: " .. sse_id, "SSE_Log_Stream")
 

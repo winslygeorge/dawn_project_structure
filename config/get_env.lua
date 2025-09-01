@@ -7,4 +7,6 @@ local config = env.load(mode == "prod" and "prod.env" or "dev.env", {
   export = false
 })
 
+config.DEBUG = mode == "dev"
+
 return config

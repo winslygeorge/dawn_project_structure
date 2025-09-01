@@ -49,18 +49,38 @@ local server_config = {
     -- Each entry is a table with 'route_prefix' and 'directory_path'
     static_configs = {
         { route_prefix = "/static", directory_path = "./public" },
+        { route_prefix = "/reactors", directory_path = "./ui-reactors" },
+
         -- You can add more static directories if needed:
         -- { route_prefix = "/assets", directory_path = "./assets" },
+    },
+
+    dev_watcher_config = {
+        interval = 1.0,
+        debounce_ms = 1000, -- restart & notify cooldown
+        retry_ms = 2000,       -- retry delay if restart fails
+        watch_dirs = {
+            components = "./lib",
+            views = "./views",
+            static = "./public"
+        }
     },
 
     multipart_parser_options = multiparser_opts_configurations,
 
     token_store = store_config,
 
+    heartbeat_config = {
+        interval = 1000, -- Heartbeat interval in milliseconds
+        timeout = 1000,  -- Timeout for heartbeat in milliseconds
+    },
+
+    reactive_render_engine = true, -- Default reactive render engine
+
     state_management_options = {
       handlers = require('websockets.handlers._index') or {},
         state_management_options = env and env.REDIS_CONFIG and env.REDIS_CONFIG or {session_timeout = 3600, -- Session timeout in seconds
-        cleanup_interval = 60  }, -- How often to clean up expired sessions
+        cleanup_interval = 600  }, -- How often to clean up expired sessions
          state = {
         state_management = require('websockets.state_management._index')
     }

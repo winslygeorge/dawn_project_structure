@@ -496,7 +496,7 @@ function applyPatch(patch) {
     }
     if (patch.type === "update-var") {
         // display overlay notification
-        showHotReloadOverlay(
+      if (isdebug)  showHotReloadOverlay(
             `🔄 Updating variable: ${patch.varName}`,
             "info",
             3000,
@@ -515,7 +515,7 @@ function applyPatch(patch) {
         }
         handler(target, patch);
         //display overlay notification
-        showHotReloadOverlay(
+         if(isdebug) showHotReloadOverlay(
             `🔄 Applying patch: ${patch.type}`,
             "info",
             3000,
@@ -560,7 +560,7 @@ async function applyInitialState(globalState = {}, clientState = {}) {
         }
         window.__initializeReactiveInputs__();
         window.__onHydrationComplete__?.();
-        window.showDebugState?.();
+        if (isdebug) window.showDebugState?.();
     } catch (e) {
         console.error("Hydration failed:", e);
     }
